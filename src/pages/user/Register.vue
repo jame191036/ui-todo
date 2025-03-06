@@ -27,37 +27,51 @@
 </template>
 
 <script>
+import { ref } from 'vue'; // Import ref to create reactive variables
+import { useRouter } from 'vue-router'; // Import useRouter for routing
 import api from '@/api'; // Import the API configuration
 
 export default {
-    data() {
-        return {
-            username: '',
-            email: '',
-            password: '',
-        };
-    },
-    methods: {
-        async handleSubmit() {
+    setup() {
+        const router = useRouter(); // Use the router hook
+        const username = ref('');
+        const email = ref('');
+        const password = ref('');
+
+        const handleSubmit = async () => {
             try {
                 console.log(import.meta.env.VITE_API_BASE_URL);
-                
+
                 const response = await api.post('users/createUser', {
-                    username: this.username,
-                    email: this.email,
-                    password: this.password,
+                    username: username.value,
+                    email: email.value,
+                    password: password.value,
                 });
 
-                // Handle the response (e.g., show a success message or redirect)
-                console.log('User registered successfully:', response);
+                if (response.status == 201) {
+                    // Handle the response (e.g., show a success message or redirect)
+                    alert("User registered successfully:");
+                    router.push("/list-user"); // Use router.push() from the Composition API
+                } else {
+                    alert("Registration failed:" + response.message);
+                }
             } catch (error) {
                 // Handle the error (e.g., show an error message)
+                alert("Registration failed:");
                 console.error('Registration failed:', error);
             }
-        },
+        };
+
+        return {
+            username,
+            email,
+            password,
+            handleSubmit,
+        };
     },
 };
 </script>
+
 
 <style scoped>
 .register-container {

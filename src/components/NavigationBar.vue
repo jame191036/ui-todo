@@ -13,16 +13,27 @@
                     <router-link class="nav-link" to="/about">About</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link class="nav-link" to="/contact">Contact</router-link>
+                    <router-link class="nav-link" to="/list-task">Task</router-link>
                 </li>
+                <li class="nav-item">
+                    <router-link class="nav-link" to="/list-user">User</router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link class="nav-link" to="/register">Register</router-link>
+                </li>
+                <!-- <li class="nav-item">
+                    <router-link class="nav-link" to="/login">Login</router-link>
+                </li> -->
                 <!-- Dropdown Menu -->
                 <li class="nav-item dropdown" @click="toggleDropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button">
-                        Language
+                        {{ userName }}
                     </a>
                     <ul class="dropdown-menu" :class="{ show: isDropdownOpen }">
-                        <li><a class="dropdown-item" href="#" @click="switchLang('en')">English</a></li>
-                        <li><a class="dropdown-item" href="#" @click="switchLang('fr')">Français</a></li>
+                        <li class="nav-item">
+                            <router-link class="nav-link" to="/login">Login</router-link>
+                        </li>
+                        <!-- <li><a class="dropdown-item" href="#" @click="switchLang('fr')">Français</a></li> -->
                     </ul>
                 </li>
             </ul>
@@ -31,11 +42,14 @@
 </template>
 
 <script>
+import { decryptData } from "@/utils/crypto"; // Adjust path if needed
+
 export default {
     data() {
         return {
             isMenuOpen: false,
             isDropdownOpen: false,
+            userName: ''
         };
     },
     methods: {
@@ -52,6 +66,7 @@ export default {
     },
     mounted() {
         document.addEventListener("click", this.closeDropdown);
+        this.userName = decryptData(localStorage.getItem("username") || 'Login');
     },
     beforeUnmount() {
         document.removeEventListener("click", this.closeDropdown);
